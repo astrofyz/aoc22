@@ -7,17 +7,17 @@ fun main() {
     }
 
     fun part1(input: List<String>): Int {
-        val res = input.map { rucksack ->
+        val res = input.flatMap { rucksack ->
             rucksack.take(rucksack.length / 2).toSet() intersect rucksack.takeLast(rucksack.length / 2).toSet()
-        }.sumOf { it.elementAt(0).priority() }
+        }.sumOf { it.priority() }
         return res
     }
 
     fun part2(input: List<String>): Int {
-        val res = input.chunked(3).map { rucksack -> rucksack[0]
+        val res = input.chunked(3).flatMap { rucksack -> rucksack[0]
             .toSet()
             .intersect(rucksack[1].toSet())
-            .intersect(rucksack[2].toSet()) }.sumOf { it.elementAt(0).priority() }
+            .intersect(rucksack[2].toSet()) }.sumOf { it.priority() }
         return res
     }
 
