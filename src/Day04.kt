@@ -1,20 +1,23 @@
 fun main() {
     fun part1(input: List<String>): Int {
-        val res = input.map {elves -> elves.replace(',', '-').split('-').map { it.toInt() } }
-            .sumOf { edges ->
-                (((edges[2] >= edges[0]) and (edges[1] >= edges[3] ))
-                        or ((edges[0] >= edges[2]) and (edges[3] >= edges[1] ))).compareTo(false) }
-        return res
+        return input.map {elves -> elves.replace(',', '-').split('-').map { it.toInt() } }
+            .count{edges -> (((edges[2] >= edges[0]) and (edges[1] >= edges[3] ))
+                    or ((edges[0] >= edges[2]) and (edges[3] >= edges[1] )))}  // learned about .count in stream
+//            .sumOf { edges ->
+//                (((edges[2] >= edges[0]) and (edges[1] >= edges[3] ))
+//                        or ((edges[0] >= edges[2]) and (edges[3] >= edges[1] ))).compareTo(false) }
     }
 
     fun part2(input: List<String>): Int {
-        val res = input.map {elves -> elves.replace(',', '-').split('-').map { it.toInt() } }
-            .sumOf { edges ->
-                (((edges[2] >= edges[0]) and (edges[3] >= edges[1] ) and (edges[1] >= edges[2]))
-                        or ((edges[0] >= edges[2]) and (edges[1] >= edges[3]) and (edges[3] >= edges[0]))
-                        or ((edges[2] >= edges[0]) and (edges[1] >= edges[3] ))
-                        or ((edges[0] >= edges[2]) and (edges[3] >= edges[1] ))).compareTo(false) }
-        return res
+        return input.map {elves -> elves.replace(',', '-').split('-').map { it.toInt() } }
+            .count { edges -> ((edges[2] <= edges[1]) and (edges[0] <= edges[3]))}
+    // learned short way to compare, felt a bit ashamed and amazed
+
+//                (((edges[2] >= edges[0]) and (edges[3] >= edges[1] ) and (edges[1] >= edges[2]))
+//                        or ((edges[0] >= edges[2]) and (edges[1] >= edges[3]) and (edges[3] >= edges[0]))
+//                        or ((edges[2] >= edges[0]) and (edges[1] >= edges[3] ))
+//                        or ((edges[0] >= edges[2]) and (edges[3] >= edges[1] )))
+//                    .compareTo(false) }
     }
 
     // test if implementation meets criteria from the description, like:
