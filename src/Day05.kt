@@ -20,9 +20,9 @@ fun main() {
     }
 
     fun parseInput(lines: String): Pair<List<MyStack>, List<String>> {
-        val stuff = lines.split("\n\n")[0].split("\n")
+        val stuff = lines.split("\n\n")[0].split("\n").dropLast(1).reversed()
         val rules = lines.split("\n\n")[1].split("\n")
-        val numberOfStacks = (stuff[stuff.size-1].filter {it.isDigit()}).length
+        val numberOfStacks = stuff[0].count { it.isLetter() }
 
         val stacks: List<MyStack> = List(numberOfStacks) { MyStack() }
 
@@ -37,7 +37,6 @@ fun main() {
                 }
             }
 
-        stacks.forEach { stack -> stack.crates = stack.crates.asReversed() }
         return Pair(stacks, rules)
     }
 
