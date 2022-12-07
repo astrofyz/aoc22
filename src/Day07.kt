@@ -6,7 +6,6 @@ fun main() {
     ){
         constructor(root: Directory): this(0, root, mutableMapOf<String, Directory>())
         constructor(size: Int, root: Directory): this(size, root, null)
-//        constructor()
     }
 
     fun Directory.addDir(name: String) {
