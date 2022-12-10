@@ -1,6 +1,10 @@
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.Point
+import java.awt.image.BufferedImage
+import java.io.File
+import java.io.IOException
+import javax.imageio.ImageIO
 import javax.swing.JFrame
 import javax.swing.JPanel
 
@@ -32,109 +36,117 @@ fun Pair<Int, Int>.adjustTail(head: Pair<Int, Int>): Pair<Int, Int>{
     }
 }
 
-fun part1(input: List<String>, window: JFrame, grid: CoreControl.Grid): Pair<Int, MutableSet<Pair<Int, Int>>> {
-    var headPos = Pair(0, 0)
-    var tailPos = Pair(0, 0)
-    val tailVisited = mutableSetOf(tailPos)
-    val headVisited = mutableSetOf(headPos)
-
-    for (step in input){
-        repeat(step.split(" ")[1].toInt()){
-            window.revalidate()
-            headPos = headPos.move(step.split(" ")[0])
-            tailPos = tailPos.adjustTail(headPos)
-            tailVisited.add(tailPos)
-            headVisited.add(headPos)
-            grid.fillRope(mutableListOf(headPos, tailPos))
-//            grid.fillVisited(tailVisited.toMutableList())
-            Thread.sleep(2)
-            grid.rope.removeAt(0)
-            grid.rope.removeAt(0)
-
-        }
-    }
+//fun part1(input: List<String>, ): Pair<Int, MutableSet<Pair<Int, Int>>> {
+//    var headPos = Pair(0, 0)
+//    var tailPos = Pair(0, 0)
+//    val tailVisited = mutableSetOf(tailPos)
+//    val headVisited = mutableSetOf(headPos)
+//
+//    for (step in input){
+//        repeat(step.split(" ")[1].toInt()){
+//            window.revalidate()
+//            headPos = headPos.move(step.split(" ")[0])
+//            tailPos = tailPos.adjustTail(headPos)
+//            tailVisited.add(tailPos)
+//            headVisited.add(headPos)
+//            grid.fillRope(mutableListOf(headPos, tailPos))
+////            grid.fillVisited(tailVisited.toMutableList())
+//            Thread.sleep(2)
+//            grid.rope.removeAt(0)
+//            grid.rope.removeAt(0)
+//
+//        }
+//    }
 //    println("${tailVisited.maxOf { it.first }}, ${tailVisited.minOf { it.first }}, ${tailVisited.maxOf { it.second }}, ${tailVisited.minOf { it.second }}")
 //    println("${headVisited.maxOf { it.first }}, ${headVisited.minOf { it.first }}, ${headVisited.maxOf { it.second }}, ${headVisited.minOf { it.second }}")
 
-    return Pair(tailVisited.size, tailVisited)
-}
+//    return Pair(tailVisited.size, tailVisited)
+//}
 
-fun part2(input: List<String>, window: JFrame, grid: CoreControl.Grid): Int {
-    val knotsPos = MutableList(10) { Pair(0, 0) }
-    val tailVisited = mutableSetOf(knotsPos[8])
 
-    for (step in input) {
-        val (directionOfStep, numberOfRepetition) = step.split(" ")
-        repeat(numberOfRepetition.toInt()) {
-            window.revalidate()
-            knotsPos[0] = knotsPos[0].move(directionOfStep)
-            for (i in 1 .. 9){
-                knotsPos[i] = knotsPos[i].adjustTail(knotsPos[i-1])
-            }
-            tailVisited.add(knotsPos[9])
-            grid.fillRope(knotsPos)
-//            grid.fillVisited(tailVisited.toMutableList())
-            Thread.sleep(5)
-            grid.rope = mutableListOf()
+fun main() {
+    class myPaint : JPanel() {
+        private var paintImage = BufferedImage(2700, 4500, BufferedImage.TYPE_3BYTE_BGR)
 
-        }
-    }
-    return tailVisited.size
-}
-
-object CoreControl {
-    @JvmStatic
-    fun main(a: Array<String>) {
-        val grid = Grid()
-        val window = JFrame()
-        window.setSize(2000, 2000)
-        window.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
-
-        val testInput = readInput("Day09")
-        window.isVisible = true
-        window.add(grid)
-
-//        part1(testInput, window, grid)
-        part2(testInput, window, grid)
-    }
-
-    class Grid : JPanel() {
-        var rope: MutableList<Point>
-        val tailVisited: MutableList<Point>
+        var rope: MutableList<Pair<Int, Int>>
+        val tailVisited: MutableList<Pair<Int, Int>>
+        var ropeBefore: MutableList<Pair<Int, Int>>
 
         init {
             rope = mutableListOf()
+            ropeBefore = mutableListOf()
             tailVisited = mutableListOf()
         }
 
         override fun paintComponent(g: Graphics) {
             super.paintComponent(g)
+            g.drawImage(paintImage, 0, 0, null)
+        }
 
+        fun updatePaint() {
+            val g: Graphics = paintImage.createGraphics()
+
+//            println("ropeBefore")
+            for (knot in ropeBefore){
+                g.clearRect(knot.second * 6 + 140, (knot.first * 6 + 20) + 200, 6, 6)
+//                println("${knot.second * 6 + 140} ${(knot.first * 6 + 20) + 420}")
+            }
+
+//            println("ropeNow")
+            g.color = Color.YELLOW
             for (knot in rope) {
-                g.color = Color.RED
-                g.fillRect(knot.x * 6 + 140, 300 - (knot.y * 6 + 20), 6, 6)
+                g.fillRect(knot.second * 6 + 140, (knot.first * 6 + 20) + 200, 6, 6)
+//                println("${knot.second * 6 + 140} ${(knot.first * 6 + 20) + 420}")
             }
+//            println("done")
 
+            g.color = Color.GREEN
             for (visited in tailVisited) {
-                g.color = Color.BLUE
-                g.fillRect(visited.x * 6 + 2 + 140, 300 - (visited.y * 6 - 2 + 20), 2, 2)
+                g.fillRect(visited.second * 6 + 2 + 140, (visited.first * 6 - 2 + 20) + 200, 2, 2)
             }
-        }
 
-        fun fillRope(currentRope: MutableList<Pair<Int, Int>>) {
-            for (knot in currentRope) {
-                rope.add(Point(knot.second, knot.first))
-            }
+            g.dispose()
             repaint()
         }
 
-        fun fillVisited(visited: MutableList<Pair<Int, Int>>) {
-            for (cell in visited) {
-                tailVisited.add(Point(cell.second, cell.first))
-            }
-            repaint()
+        @Throws(IOException::class)
+        fun save(filename: String) {
+            ImageIO.write(paintImage, "PNG", File("day9_frames/$filename.png"))
         }
     }
+
+    fun part2(input: List<String>, pic: myPaint): Int {
+        val knotsPos = MutableList(10) { Pair(0, 0) }
+        val tailVisited = mutableSetOf(knotsPos[8])
+
+        var fname = 0
+        for (step in input) {
+            val (directionOfStep, numberOfRepetition) = step.split(" ")
+            repeat(numberOfRepetition.toInt()) {
+                pic.ropeBefore = knotsPos.map{it.copy()}.toMutableList()
+                knotsPos[0] = knotsPos[0].move(directionOfStep)
+                for (i in 1 .. 9){
+                    knotsPos[i] = knotsPos[i].adjustTail(knotsPos[i-1])
+                }
+                pic.tailVisited.add(knotsPos[9])
+                pic.rope = knotsPos
+                pic.updatePaint()
+                pic.save(fname.toString().padStart(6, '0'))
+                fname++
+                if (fname % 100 == 0){
+                    println(fname)
+                }
+            }
+        }
+        return tailVisited.size
+    }
+
+    val testInput = readInput("Day09")
+
+    var pic = myPaint()
+
+    part2(testInput, pic)
 }
+
 
 
