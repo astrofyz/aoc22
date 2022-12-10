@@ -46,15 +46,15 @@ fun part1(input: List<String>, window: JFrame, grid: CoreControl.Grid): Pair<Int
             tailVisited.add(tailPos)
             headVisited.add(headPos)
             grid.fillRope(mutableListOf(headPos, tailPos))
-            grid.fillVisited(tailVisited.toMutableList())
-            Thread.sleep(150)
+//            grid.fillVisited(tailVisited.toMutableList())
+            Thread.sleep(2)
             grid.rope.removeAt(0)
             grid.rope.removeAt(0)
 
         }
     }
-    println("${tailVisited.maxOf { it.first }}, ${tailVisited.minOf { it.first }}, ${tailVisited.maxOf { it.second }}, ${tailVisited.minOf { it.second }}")
-    println("${headVisited.maxOf { it.first }}, ${headVisited.minOf { it.first }}, ${headVisited.maxOf { it.second }}, ${headVisited.minOf { it.second }}")
+//    println("${tailVisited.maxOf { it.first }}, ${tailVisited.minOf { it.first }}, ${tailVisited.maxOf { it.second }}, ${tailVisited.minOf { it.second }}")
+//    println("${headVisited.maxOf { it.first }}, ${headVisited.minOf { it.first }}, ${headVisited.maxOf { it.second }}, ${headVisited.minOf { it.second }}")
 
     return Pair(tailVisited.size, tailVisited)
 }
@@ -73,8 +73,8 @@ fun part2(input: List<String>, window: JFrame, grid: CoreControl.Grid): Int {
             }
             tailVisited.add(knotsPos[9])
             grid.fillRope(knotsPos)
-            grid.fillVisited(tailVisited.toMutableList())
-            Thread.sleep(150)
+//            grid.fillVisited(tailVisited.toMutableList())
+            Thread.sleep(5)
             grid.rope = mutableListOf()
 
         }
@@ -87,10 +87,10 @@ object CoreControl {
     fun main(a: Array<String>) {
         val grid = Grid()
         val window = JFrame()
-        window.setSize(400, 400)
+        window.setSize(2000, 2000)
         window.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
 
-        val testInput = readInput("Day09_test2")
+        val testInput = readInput("Day09")
         window.isVisible = true
         window.add(grid)
 
@@ -112,12 +112,12 @@ object CoreControl {
 
             for (knot in rope) {
                 g.color = Color.RED
-                g.fillRect(knot.x * 12 + 140, 300 - (knot.y * 12 + 20), 12, 12)
+                g.fillRect(knot.x * 6 + 140, 300 - (knot.y * 6 + 20), 6, 6)
             }
 
             for (visited in tailVisited) {
                 g.color = Color.BLUE
-                g.fillRect(visited.x * 12 + 2 + 140, 300 - (visited.y * 12 - 2 + 20), 8, 8)
+                g.fillRect(visited.x * 6 + 2 + 140, 300 - (visited.y * 6 - 2 + 20), 2, 2)
             }
         }
 
@@ -136,3 +136,5 @@ object CoreControl {
         }
     }
 }
+
+
