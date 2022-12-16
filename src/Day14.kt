@@ -159,6 +159,10 @@ fun main() {
             }
         }
     println(countSand)
+        println(blockedPoints.maxOf { it.first })
+        println(blockedPoints.minOf { it.first })
+        println(blockedPoints.maxOf { it.second })
+        println(blockedPoints.minOf { it.second })
     return 0
     }
 
